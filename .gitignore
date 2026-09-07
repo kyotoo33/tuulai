@@ -1,0 +1,23 @@
+# python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# local state — progress DB, logs, uploaded photos of your own work
+data/
+
+# scratch space for material you're about to ingest
+inbox/
+
+# third-party course material (professor's bank, past papers, slides).
+# Keep copyrighted material OUT of any public repository.
+# NOTE: root-anchored, so frontend/static/vendor/ (KaTeX) is still tracked.
+/vendor/
+
+# secrets
+.env
+.env.*
+
+# os
+.DS_Store

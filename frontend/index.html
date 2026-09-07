@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tuulai</title>
+  <link rel="stylesheet" href="/static/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/static/css/app.css?v=14">
+  <script>/* theme before paint — no flash */
+    document.documentElement.dataset.theme = localStorage.getItem('tuulai-theme') || 'light';
+  </script>
+</head>
+<body>
+  <div class="shell">
+    <nav class="rail">
+      <div class="brand"><b>Tuulai</b><small>Your course</small></div>
+      <a class="navlink" href="#/today"><span class="ic">◎</span> Today</a>
+      <a class="navlink" href="#/radar"><span class="ic">◈</span> Quiz Radar</a>
+      <a class="navlink" href="#/mock"><span class="ic">▦</span> Mock quiz</a>
+      <a class="navlink" href="#/concepts"><span class="ic">◇</span> Concepts</a>
+      <a class="navlink" href="#/playbooks"><span class="ic">♟</span> Playbooks</a>
+      <a class="navlink" href="#/cards"><span class="ic">▤</span> Cards</a>
+      <a class="navlink" href="#/errors"><span class="ic">✦</span> Error log</a>
+      <a class="navlink" href="#/coach"><span class="ic">◆</span> Coach</a>
+      <a class="navlink" href="#/library"><span class="ic">▢</span> Library</a>
+      <div class="spacer"></div>
+      <button class="themebtn" id="themebtn">◐ Theme</button>
+    </nav>
+    <main class="main"><div class="wrap" id="view"><div class="spinner"></div></div></main>
+  </div>
+
+  <script src="/static/vendor/katex/katex.min.js"></script>
+  <script src="/static/vendor/katex/auto-render.min.js"></script>
+  <script src="/static/js/api.js?v=14"></script>
+  <script src="/static/js/viz.js?v=14"></script>
+  <script src="/static/js/app.js?v=14"></script>
+</body>
+</html>
