@@ -12,9 +12,8 @@ sections in the index — e.g. "Cheatsheet" or "Exam 1 — proof writing").
 
 Register modules in backend/content/__init__.py:  for _cn in ("example", ...)
 
-GOTCHA — the one that bites everyone: markdown **bold** cannot contain inline math.
-The renderer splits text on `$...$`, so `**the claim $P\to Q$**` renders literal asterisks.
-Write `**the claim:**` then the math outside the bold.
+Markdown and math mix freely: `md()` stashes each `$...$` behind an inert token before
+applying markdown, so `**Base case ($n=1$).**` renders bold with the math intact.
 """
 
 CONCEPTS = [

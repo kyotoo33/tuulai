@@ -22,17 +22,17 @@ A validation error always names the offending key, e.g.
    ≥1 live problem. Reading alone must never count as studying.
 4. **LaTeX is linted at import.** Unbalanced `$`, braces or `\begin/\end` fail the boot.
 
-## The bold-and-math gotcha (read this one)
+## Markdown and math mix freely
 
-The renderer splits text on `$...$` before applying markdown, so **a bold span cannot contain
-inline math**:
+`md()` in `app.js` stashes every `$...$` behind an inert token before applying markdown, so a
+bold or italic span **may cross a formula**:
 
 ```python
-r"**the claim $P \to Q$**"        # BROKEN — renders literal asterisks
-r"**the claim:** $P \to Q$"       # correct — math outside the bold
+r"**Base case ($n = 1$).** The left side is $1$."   # renders bold, math intact
 ```
 
-This is the single most common authoring mistake. Same applies to `*italics*`.
+Math is still protected from prose substitutions — `$f''(x)$` keeps its double prime rather
+than turning into a curly quote.
 
 ---
 

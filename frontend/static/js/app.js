@@ -15,20 +15,26 @@ function esc(s) {
 /* Content prose may carry **bold**, *italic*, and inline math. Escape first, then reintroduce
    a tiny safe subset, then KaTeX renders the math delimiters. */
 function md(s) {
-  // Split on math delimiters so prose substitutions never touch LaTeX (e.g. derivatives f'').
-  // Segments alternate prose / $…$ / prose / $$…$$ … ; transform prose segments only.
-  const parts = String(s == null ? '' : s).split(/(\$\$[^$]*\$\$|\$[^$]*\$)/g);
-  return parts.map(seg => {
-    if (seg.startsWith('$')) return esc(seg);   // math — escape HTML only; KaTeX renders it
-    return esc(seg)
-      .replace(/``/g, '“').replace(/''/g, '”')
-      .replace(/\\emoji\{[^}]*\}/g, '')
-      .replace(/---/g, '—')
-      .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
-      .replace(/(^|[^*])\*([^*]+)\*/g, '$1<i>$2</i>')
-      .replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
-  }).join('');
+  // Math is STASHED behind placeholders (not merely skipped) so prose substitutions never
+  // touch LaTeX — e.g. derivatives f'' — while markdown spans may still cross a formula.
+  // `**Base case ($n=1$).**` must render bold, so the bold regex needs one continuous prose
+  // string with each formula standing in as an inert token. NUL delimits the token because it
+  // cannot occur in authored content (a bare " 3 " placeholder would eat real prose digits).
+  const math = [];
+  const NUL = '\u0000';
+  const buf = String(s == null ? '' : s)
+    .split(/(\$\$[^$]*\$\$|\$[^$]*\$)/g)
+    .map(seg => seg.startsWith('$') ? NUL + (math.push(seg) - 1) + NUL : esc(seg))
+    .join('')
+    .replace(/``/g, '\u201c').replace(/''/g, '\u201d')
+    .replace(/\\emoji\{[^}]*\}/g, '')
+    .replace(/---/g, '\u2014')
+    .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
+    .replace(/(^|[^*])\*([^*]+)\*/g, '$1<i>$2</i>')
+    .replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>');
+  return buf.replace(/\u0000(\d+)\u0000/g, (_, i) => esc(math[+i]));  // KaTeX renders these
 }
+
 function renderMath(el) {
   if (!window.renderMathInElement) return;
   try {
