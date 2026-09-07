@@ -6,6 +6,10 @@ by `schema._check_viz`. You author a payload; the engine renders it. No drawing 
 See them all rendered live at **Concepts → Reference → Visualization gallery**
 (`concept.example.gallery`) — delete that page once you know the payloads.
 
+Authored strings in a payload (table cells, `proofsteps` claims/lines/tags, column headers)
+go through the same markdown+math renderer as concept prose, so `**bold**` and `$math$` both
+work — and may be combined.
+
 A viz block inside a concept page looks like:
 
 ```python

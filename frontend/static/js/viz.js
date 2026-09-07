@@ -12,6 +12,9 @@ function svg(tag, attrs = {}, children = []) {
 }
 function esc2(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+/* Authored viz strings may carry markdown + math, exactly like concept prose. md() lives in
+   app.js and is defined by the time renderViz runs; fall back to plain escaping if absent. */
+function mdIn(s) { return (typeof md === 'function') ? md(s) : esc2(s); }
 
 /* ── truthtable — HTML table, matching columns boxed, predict/reveal toggle ── */
 function vizTruthtable(el, d) {
@@ -24,7 +27,7 @@ function vizTruthtable(el, d) {
   const thead = document.createElement('tr');
   d.columns.forEach((c, i) => {
     const th = document.createElement('th');
-    th.innerHTML = c;
+    th.innerHTML = mdIn(c);
     if (match.has(i)) th.classList.add('match');
     if (i < inputs) th.classList.add('input');
     thead.appendChild(th);
@@ -64,7 +67,7 @@ function vizProofsteps(el, d) {
   if (d.claim) {
     const c = document.createElement('div');
     c.className = 'ps-claim';
-    c.innerHTML = '<span class="lbl">Claim</span>' + d.claim;
+    c.innerHTML = '<span class="lbl">Claim</span>' + mdIn(d.claim);
     wrap.appendChild(c);
   }
   const ol = document.createElement('ol');
@@ -73,12 +76,12 @@ function vizProofsteps(el, d) {
     const li = document.createElement('li');
     const line = document.createElement('div');
     line.className = 'ps-line';
-    line.innerHTML = s.line;
+    line.innerHTML = mdIn(s.line);
     li.appendChild(line);
     if (s.tag || s.mark) {
       const tag = document.createElement('div');
       tag.className = 'ps-tag';
-      tag.innerHTML = (s.tag || '') + (s.mark ? `<span class="ps-mark">${esc2(s.mark)}</span>` : '');
+      tag.innerHTML = mdIn(s.tag || '') + (s.mark ? `<span class="ps-mark">${esc2(s.mark)}</span>` : '');
       li.appendChild(tag);
     }
     ol.appendChild(li);
@@ -110,7 +113,7 @@ function vizReftable(el, d) {
   const thead = document.createElement('tr');
   d.columns.forEach((c, i) => {
     const th = document.createElement('th');
-    th.innerHTML = c;
+    th.innerHTML = mdIn(c);
     if (hide.has(i)) th.classList.add('answer');
     thead.appendChild(th);
   });
@@ -119,7 +122,7 @@ function vizReftable(el, d) {
     const tr = document.createElement('tr');
     r.forEach((cell, i) => {
       const td = document.createElement('td');
-      td.innerHTML = cell;
+      td.innerHTML = mdIn(cell);
       if (i === 0) td.classList.add('rowhead');
       if (hide.has(i)) td.classList.add('answer');
       tr.appendChild(td);
